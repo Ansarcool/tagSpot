@@ -1,3 +1,9 @@
+import {initialCards} from "./cards.js";
+import './pages/index.css';
+import './fonts/fonts.css';
+import './fonts/normalize.css';
+
+
 // @todo: Темплейт карточки
 const template = document.querySelector('#card-template').content;
 const card = template.cloneNode(true);
