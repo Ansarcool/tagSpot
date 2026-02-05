@@ -1,5 +1,5 @@
 
-const initialCards = [
+export const initialCards = [
     {
         name: "Бали",
         link: "https://img.pac.ru/resorts/213172/248694/big/B39BBF51C0A880143F69A79019B488BD.jpg",
@@ -25,4 +25,3 @@ const initialCards = [
         link: "https://images.unsplash.com/photo-1657440925570-94ca8047b6fe?q=80&w=3008&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     }
 ];
-export {initialCards};
