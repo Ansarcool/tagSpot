@@ -20,11 +20,13 @@ initialCards.forEach(item => {
     const img = card.querySelector('.card__image');
     const title = card.querySelector('.card__title');
 
+
+
     img.src = item['link'];
     title.textContent = item['name'];
     cardsContainer.append(card);
 })
-const popUp = document.querySelector('.popup__content');
+
 const popUpEdit = document.querySelector('.popup_type_edit');
 const profileEditButton = document.querySelector('.profile__edit-button');
 const popUpInputName = document.querySelector('.popup__input_type_name');
@@ -48,12 +50,16 @@ profileEditButton.addEventListener('click', (evt) => {
 // type edit okak
 
 submitButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    profileTitle.textContent = popUpInputName.value;
-    profileDescription.textContent = popUpInputDescription.value;
-    popUpEdit.classList.remove('popup_is-opened');
-});
+    evt.preventDefault()
+    const card = template.cloneNode(true);
+    const img = card.querySelector('.card__image');
+    const title = card.querySelector('.card__title');
 
+    img.src = cardAddInputUrl.value;
+    title.textContent = cardAddInputName.value;
+
+    cardsContainer.append(card);
+});
 document.body.addEventListener('keydown', (evt) => {
     if (evt.key === 'Escape') {
         const openedPopup = document.querySelector('.popup_is-opened');
@@ -78,7 +84,7 @@ document.body.addEventListener('click', (evt) => {
 
 cardAddButton.addEventListener('click', (evt) => {
     popUpAddCard.classList.add('popup_is-opened');
-
+    popUpAddCard.classList.add('popup_is-animated');
 })
 
 // cards
