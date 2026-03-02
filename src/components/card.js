@@ -1,5 +1,5 @@
 
-import {template, profileEditButton, popUpEdit} from "./index.js";
+import {template, profileEditButton, popUpEdit} from "src/index.js";
 // like card
 function like() {
     cardsContainer.addEventListener('click', (evt) => {
