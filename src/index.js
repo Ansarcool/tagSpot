@@ -24,7 +24,7 @@ const popUpTypeImg = document.querySelector('.popup_type_image');
 const popUpImage = popUpTypeImg.querySelector('.popup__image');
 const cardAddButton = document.querySelector('.profile__add-button');
 const popUpAddCard = document.querySelector('.popup_type_new-card');
-
+const imgPopupCaption = document.querySelector('.popup__caption');
 profileEditButton.addEventListener('click', () => {
     popUpInputName.value = profileTitle.textContent;
     popUpInputDescription.value = profileDescription.textContent;
@@ -39,6 +39,7 @@ cardAddButton.addEventListener('click', () => {
 cardsContainer.addEventListener('click', (evt) => {
     if (evt.target.classList.contains('card__image')) {
         popUpImage.src = evt.target.closest('.card__image').src;
+        imgPopupCaption.textContent = evt.target.closest('.card').querySelector('.card__title').textContent;
         openModal(popUpTypeImg);
     }
 });
@@ -89,12 +90,15 @@ formNewPlace.addEventListener('submit', (evt) => {
     img.src = cardAddInputUrl.value;
     title.textContent = cardAddInputName.value;
     cardsContainer.prepend(card);
+    closeModal(popUpAddCard);
 })
 formEditProfile.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
     profileTitle.textContent = popUpInputName.value;
     profileDescription.textContent = popUpInputDescription.value;
+
+    closeModal(popUpEdit);
 });
 cardsContainer.addEventListener('click', (evt) => {
     likeFunc(evt);
