@@ -23,7 +23,7 @@ const popUpImage = popUpTypeImg.querySelector('.popup__image');
 const cardAddButton = document.querySelector('.profile__add-button');
 const popUpAddCard = document.querySelector('.popup_type_new-card');
 const imgPopupCaption = document.querySelector('.popup__caption');
-function allPopupClose(evt) {
+export function allPopupClose(evt) {
     const openedPopup = document.querySelector('.popup_is-opened');
     if (evt.key === 'Escape') {
         closeModal(openedPopup);
@@ -39,8 +39,6 @@ profileEditButton.addEventListener('click', () => {
     popUpInputName.value = profileTitle.textContent;
     popUpInputDescription.value = profileDescription.textContent;
     openModal(popUpEdit);
-    document.body.addEventListener('keydown', allPopupClose);
-    document.body.addEventListener('click', allPopupClose);
 });
 cardAddButton.addEventListener('click', () => {
     openModal(popUpAddCard);
@@ -85,6 +83,8 @@ cardsContainer.addEventListener('click', (evt) => {
     likeFunc(evt);
     deleteFunc(evt);
 })
+document.body.addEventListener('keydown', allPopupClose);
+document.body.addEventListener('click', allPopupClose);
 
 
 
