@@ -1,4 +1,4 @@
-import { closeModal, openModal } from "./components/modal.js";
+import { closeModal, openModal} from "./components/modal.js";
 import {createCard} from "./components/card.js";
 import {likeFunc} from "./components/card.js";
 import {deleteFunc} from "./components/card.js";
@@ -83,9 +83,6 @@ cardsContainer.addEventListener('click', (evt) => {
     likeFunc(evt);
     deleteFunc(evt);
 })
-document.body.addEventListener('keydown', allPopupClose);
-document.body.addEventListener('click', allPopupClose);
-
 
 
 
