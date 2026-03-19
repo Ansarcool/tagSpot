@@ -1,6 +1,16 @@
+import { enableValidation, clearValidation } from './components/validation.js';
 import { getUser, getCards, addCard, deleteCard, addLike, removeLike, editProfile, editAvatar } from './components/api.js';
 import { closeModal, openModal} from "./components/modal.js";
 import './index.css';
+
+const validationConfig = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'form__input-error_active'
+};
 
 const template = document.querySelector('#card-template').content;
 const formNewPlace = document.forms['new-place'];
@@ -24,32 +34,25 @@ const imgPopupCaption = document.querySelector('.popup__caption');
 const formNewAvatar = document.forms['new-avatar'];
 const popUpAvatarInput = document.querySelector('#avatar-input');
 
-formEditProfile.addEventListener('input', (evt) => {
-    checkEditValidity(evt.target);
-});
-formNewPlace.addEventListener('input', (evt) => {
-    checkCardValidity(evt.target);
-});
-formNewAvatar.addEventListener('input', (evt) => {
-    checkAvatarValidity(evt.target);
-});
+
 profileEditButton.addEventListener('click', () => {
     popUpInputName.value = profileTitle.textContent;
     popUpInputDescription.value = profileDescription.textContent;
+    clearValidation(popUpEdit, validationConfig);
     openModal(popUpEdit);
 });
-cardAddButton.addEventListener('click', (evt) => {
-    const submitButton = formNewPlace.querySelector('button');
-    submitButton.disabled = true;
-    submitButton.classList.add('button-disabled');
+
+cardAddButton.addEventListener('click', () => {
+    clearValidation(popUpAddCard, validationConfig);
     openModal(popUpAddCard);
 });
-profileImage.addEventListener('click', (evt) => {
-    const submitButton = formNewAvatar.querySelector('button');
-    submitButton.disabled = true;
-    submitButton.classList.add('button-disabled');
+
+
+profileImage.addEventListener('click', () => {
+    clearValidation(popUpProfileImg, validationConfig);
     openModal(popUpProfileImg);
-})
+});
+
 formNewPlace.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const submitButton = formNewPlace.querySelector('button');
@@ -131,145 +134,6 @@ formNewAvatar.addEventListener('submit', (evt) => {
         })
 })
 
-// Edit form validation
-
-
-// Передадим текст ошибки вторым параметром
-const showInputError = (element, errorMessage) => {
-    const formError = formEditProfile.querySelector(`.${element.id}-error`)
-    element.classList.add('form__input_type_error');
-// Заменим содержимое span с ошибкой на переданный параметр
-    formError.textContent = errorMessage;
-    formError.classList.add('form__input-error_active');
-};
-const hideInputError = (element) => {
-    const formError = formEditProfile.querySelector(`.${element.id}-error`)
-    element.classList.remove('form__input_type_error');
-    formError.classList.remove('form__input-error_active');
-// Очистим ошибку
-    formError.textContent = '';
-};
-const checkEditValidity = (input) => {
-    const regex = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
-    const popUpInputName = document.querySelector('#name-input');
-    const popUpInputDescription = document.querySelector('#description-input');
-    const submitButton = formEditProfile.querySelector('button');
-    if (!regex.test(input.value)) {
-        input.setCustomValidity('Разрешены только латинские и кириллические буквы, дефис и пробел');
-    } else {
-        input.setCustomValidity('');
-    }
-    if (!input.validity.valid){
-        showInputError(input, input.validationMessage)
-    } else {
-        hideInputError(input);
-    }
-    if (popUpInputName.validity.valid && popUpInputDescription.validity.valid) {
-        submitButton.disabled = false;
-        submitButton.classList.remove('button-disabled');
-    } else {
-        submitButton.disabled = true;
-        submitButton.classList.add('button-disabled');
-    }
-};
-
-// addNewcard form validation
-
-const showError = (element, errorMessage) => {
-    const formError = formNewPlace.querySelector(`.${element.id}-error`);
-    element.classList.add('form__input_type_error');
-    formError.textContent = errorMessage;
-    formError.classList.add('form__input-error_active');
-};
-
-const hideError = (element) => {
-    const formError = formNewPlace.querySelector(`.${element.id}-error`);
-    element.classList.remove('form__input_type_error');
-    formError.classList.remove('form__input-error_active');
-    formError.textContent = '';
-};
-
-const checkCardValidity = (input) => {
-    const regex = /^[a-zA-Zа-яА-ЯёЁ\s-]+$/;
-
-    if (input !== cardAddInputUrl) {
-        if (!regex.test(input.value)) {
-            input.setCustomValidity('Разрешены только латинские и кириллические буквы, дефис и пробел');
-        } else {
-            input.setCustomValidity('');
-        }
-    } else {
-        input.setCustomValidity('');
-    }
-
-    if (!input.validity.valid){
-        showError(input, input.validationMessage);
-    } else {
-        hideError(input);
-    }
-
-    const button = formNewPlace.querySelector('.button');
-    if (cardAddInputName.validity.valid && cardAddInputUrl.validity.valid) {
-        button.disabled = false;
-        button.classList.remove('button-disabled');
-    } else {
-        button.disabled = true;
-        button.classList.add('button-disabled');
-    }
-}
-
-
-// update profile image
-
-const showErrorMessage = (element, errorMessage) => {
-    const formError = formNewAvatar.querySelector(`.${element.id}-error`);
-    element.classList.add('form__input_type_error');
-    formError.textContent = errorMessage;
-    formError.classList.add('form__input-error_active');
-};
-
-const hideErrorMessage = (element) => {
-    const formError = formNewAvatar.querySelector(`.${element.id}-error`);
-    element.classList.remove('form__input_type_error');
-    formError.classList.remove('form__input-error_active');
-    formError.textContent = '';
-};
-const checkAvatarValidity = (input) => {
-
-    if (!input.validity.valid){
-        showErrorMessage(input, input.validationMessage);
-    } else {
-        hideErrorMessage(input);
-    }
-
-    const button = formNewAvatar.querySelector('.button');
-    if (input.validity.valid) {
-        button.disabled = false;
-        button.classList.remove('button-disabled');
-    } else {
-        button.disabled = true;
-        button.classList.add('button-disabled');
-    }
-}
-
-
-// const getUser = fetch (`https://practicetasks.kz/tagspot/users/me`, {
-//         headers: {
-//             authorization: '826752daf4464a1c899218c2fde56babkDrgkLDTGB'
-//         }
-//     })
-//     .then((response) => {
-//         return response.json()
-//     });
-// const getCards = fetch (`https://practicetasks.kz/tagspot/cards`, {
-//         headers: {
-//             authorization: '826752daf4464a1c899218c2fde56babkDrgkLDTGB',
-//             'Content-Type': 'application/json'
-//         }
-// })
-//     .then((response) => {
-//         return response.json()
-//     });
 
 Promise.all([getUser(), getCards()])
     .then(([userData, cardsData]) => {
@@ -301,13 +165,7 @@ cardsContainer.addEventListener('click', (evt) => {
     const card = evt.target.closest('.card');
     const likeCounter = card.querySelector('.card__likes');
     if (evt.target.classList.contains('card__delete-button')) {
-        fetch(`https://practicetasks.kz/tagspot/cards/${evt.target.id}`, {
-            method: 'DELETE',
-            headers: {
-                authorization: '826752daf4464a1c899218c2fde56babkDrgkLDTGB',
-                'Content-Type': 'application/json'
-            }
-        })
+        deleteCard()
             .then((response) => {
                 if (response.ok) {
                     evt.target.closest('.card').remove();
@@ -316,13 +174,7 @@ cardsContainer.addEventListener('click', (evt) => {
         .catch(err => console.log(err));
     }
     if (evt.target.classList.contains('card__like-button_is-active')) {
-        fetch(`https://practicetasks.kz/tagspot/cards/likes/${evt.target.id}`,{
-            method: 'DELETE',
-            headers: {
-                authorization: '826752daf4464a1c899218c2fde56babkDrgkLDTGB',
-                'Content-Type': 'application/json'
-            }
-        })
+        removeLike()
             .then((response) => response.json())
             .then((data) => {
                 evt.target.classList.remove('card__like-button_is-active');
@@ -330,13 +182,7 @@ cardsContainer.addEventListener('click', (evt) => {
             })
         .catch(err => console.log(err));
     } else if (!evt.target.classList.contains('card__like-button_is-active') && evt.target.classList.contains('card__like-button')) {
-        fetch(`https://practicetasks.kz/tagspot/cards/likes/${evt.target.id}`,{
-            method: 'PUT',
-            headers: {
-                authorization: '826752daf4464a1c899218c2fde56babkDrgkLDTGB',
-                'Content-Type': 'application/json'
-            }
-        })
+        addLike()
             .then((response) => response.json())
             .then((data) => {
                 evt.target.classList.add('card__like-button_is-active');
@@ -350,3 +196,4 @@ cardsContainer.addEventListener('click', (evt) => {
         openModal(popUpTypeImg);
     }
 });
+enableValidation(validationConfig);
