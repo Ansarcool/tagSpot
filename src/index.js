@@ -33,7 +33,8 @@ const popUpAddCard = document.querySelector('.popup_type_new-card');
 const imgPopupCaption = document.querySelector('.popup__caption');
 const formNewAvatar = document.forms['new-avatar'];
 const popUpAvatarInput = document.querySelector('#avatar-input');
-
+const templateElement = template.cloneNode(true);
+let cardId;
 
 profileEditButton.addEventListener('click', () => {
     popUpInputName.value = profileTitle.textContent;
@@ -63,8 +64,7 @@ formNewPlace.addEventListener('submit', (evt) => {
     const link = cardAddInputUrl.value;
 
     addCard(name, link)
-        .then(response => response.json())
-    .then(cardsData => {
+        .then(cardsData => {
         const templateElement = template.cloneNode(true);
         const img = templateElement.querySelector('.card__image');
         const title = templateElement.querySelector('.card__title');
@@ -94,9 +94,6 @@ formEditProfile.addEventListener('submit', (evt) => {
     const submitLoaderText = 'Сохранение';
     submitButton.textContent = submitLoaderText;
     editProfile(newName, newAbout)
-        .then((response) => {
-            return response.json()
-        })
     .then((data) => {
         profileTitle.textContent = newName;
         profileDescription.textContent = newAbout;
@@ -119,9 +116,6 @@ formNewAvatar.addEventListener('submit', (evt) => {
     submitButton.textContent = submitLoaderText;
     const newAvatar = popUpAvatarInput.value;
     editAvatar(newAvatar)
-        .then((response) => {
-            return response.json();
-        })
         .then((data) => {
             profileImage.style.backgroundImage = `url(${newAvatar})`;
             closeModal(popUpProfileImg);
@@ -162,28 +156,29 @@ Promise.all([getUser(), getCards()])
     .catch(err => console.error(err));
 
 cardsContainer.addEventListener('click', (evt) => {
+    const cardId = evt.target.id;
     const card = evt.target.closest('.card');
+    if (card === null || card === undefined) {
+        return;
+    }
     const likeCounter = card.querySelector('.card__likes');
     if (evt.target.classList.contains('card__delete-button')) {
-        deleteCard()
-            .then((response) => {
-                if (response.ok) {
-                    evt.target.closest('.card').remove();
-                }
+        deleteCard(cardId)
+            .then(() => {
+                card.remove();
             })
         .catch(err => console.log(err));
     }
     if (evt.target.classList.contains('card__like-button_is-active')) {
-        removeLike()
-            .then((response) => response.json())
+        removeLike(cardId)
+
             .then((data) => {
                 evt.target.classList.remove('card__like-button_is-active');
                 likeCounter.textContent = data.likes.length;
             })
         .catch(err => console.log(err));
     } else if (!evt.target.classList.contains('card__like-button_is-active') && evt.target.classList.contains('card__like-button')) {
-        addLike()
-            .then((response) => response.json())
+        addLike(cardId)
             .then((data) => {
                 evt.target.classList.add('card__like-button_is-active');
                 likeCounter.textContent = data.likes.length;
@@ -196,4 +191,5 @@ cardsContainer.addEventListener('click', (evt) => {
         openModal(popUpTypeImg);
     }
 });
+
 enableValidation(validationConfig);
