@@ -65,22 +65,26 @@ formNewPlace.addEventListener('submit', (evt) => {
 
     addCard(name, link)
         .then(cardsData => {
-        const templateElement = template.cloneNode(true);
-        const img = templateElement.querySelector('.card__image');
-        const title = templateElement.querySelector('.card__title');
+            console.log(cardsData);
+            const templateElement = template.cloneNode(true);
+            const img = templateElement.querySelector('.card__image');
+            const title = templateElement.querySelector('.card__title');
+            const likeButton = templateElement.querySelector('.card__like-button');
 
-        img.src = link;
-        title.textContent = name;
+        img.src = cardsData.link;
+        title.textContent = cardsData.name;
+
+        likeButton.id = cardsData.id;
 
         cardsContainer.prepend(templateElement);
         submitButton.textContent = 'Сохранение';
-        closeModal(popUpAddCard);
     })
     .catch(error => {
         console.log(error);
     })
         .finally(() => {
             submitButton.textContent = submitDefaultText;
+            closeModal(popUpAddCard);
         })
 });
 
@@ -142,8 +146,11 @@ Promise.all([getUser(), getCards()])
             const likeCounter = templateElement.querySelector('.card__likes');
             const deleteButton = templateElement.querySelector('.card__delete-button');
             const likeButton = templateElement.querySelector('.card__like-button');
+
+
             deleteButton.id = card.id;
             likeButton.id = card.id;
+
             if (card.owner.id !== userData.id) {
                 deleteButton.remove();
             }
@@ -171,7 +178,6 @@ cardsContainer.addEventListener('click', (evt) => {
     }
     if (evt.target.classList.contains('card__like-button_is-active')) {
         removeLike(cardId)
-
             .then((data) => {
                 evt.target.classList.remove('card__like-button_is-active');
                 likeCounter.textContent = data.likes.length;
