@@ -63,21 +63,27 @@ formNewPlace.addEventListener('submit', (evt) => {
     const name = cardAddInputName.value;
     const link = cardAddInputUrl.value;
 
+
     addCard(name, link)
         .then(cardsData => {
-            console.log(cardsData);
             const templateElement = template.cloneNode(true);
-            const img = templateElement.querySelector('.card__image');
-            const title = templateElement.querySelector('.card__title');
-            const likeButton = templateElement.querySelector('.card__like-button');
+            const cardElement = templateElement.querySelector('.card');
 
-        img.src = cardsData.link;
-        title.textContent = cardsData.name;
+            const img = cardElement.querySelector('.card__image');
+            const title = cardElement.querySelector('.card__title');
+            const likeCounter = cardElement.querySelector('.card__likes');
+            const likeButton = cardElement.querySelector('.card__like-button');
+            const deleteButton = cardElement.querySelector('.card__delete-button');
 
-        likeButton.id = cardsData.id;
+            img.src = cardsData.link;
+            title.textContent = cardsData.name;
+            likeCounter.textContent = cardsData.likes.length;
 
-        cardsContainer.prepend(templateElement);
-        submitButton.textContent = 'Сохранение';
+            likeButton.id = cardsData.id;
+            deleteButton.id = cardsData.id;
+
+            cardsContainer.prepend(cardElement);
+            submitButton.textContent = 'Сохранение';
     })
     .catch(error => {
         console.log(error);
