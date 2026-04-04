@@ -160,6 +160,15 @@ Promise.all([getUser(), getCards()])
             if (card.owner.id !== userData.id) {
                 deleteButton.remove();
             }
+            let isLiked = false;
+            card.likes.forEach(user => {
+                if (user.id === userData.id) {
+                    isLiked = true;
+                }
+            });
+            if (isLiked) {
+                likeButton.classList.add('card__like-button_is-active');
+            }
             img.src = card.link;
             title.textContent = card.name;
             likeCounter.textContent = card.likes.length;
